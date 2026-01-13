@@ -69,7 +69,7 @@ For figures with images, the image format is usually detected automatically. For
   caption: "Stacked bar chart of weather data.",
 )
 
-Vector graphics like svg, pdf are best for charts and other figures with text or lines.
+Vector graphics like SVG, PDF are best for charts and other figures with text or lines.
 They will look much nicer and crisper and any text in them will be more selectable, searchable, and accessible.
 
 == Raster figures
@@ -79,8 +79,8 @@ They will look much nicer and crisper and any text in them will be more selectab
   caption: "Dramatic evening clouds.",
 )
 
-Of the raster graphics formats, screenshots of user interfaces and text, as well as line art, are better shown with png.
-jpg is better for photographs.
+Of the raster graphics formats, screenshots of user interfaces and text, as well as line art, are better shown with PNG.
+JPEG is better for photographs.
 Make sure all raster graphics are captured in high enough resolution so they look crisp and scale well.
 
 == Alternative texts
