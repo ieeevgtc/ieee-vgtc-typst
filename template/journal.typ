@@ -87,22 +87,6 @@ Make sure all raster graphics are captured in high enough resolution so they loo
 
 Always include an alternative text that describes the image. The alt text should not be the same as the caption, but should describe the image in a way that makes sense when the image is not visible.
 
-== Accessibility
-
-To create accessible PDFs that comply with PDF/UA (Universal Accessibility) standards, compile your document with the `--pdf-standard ua-1` flag:
-
-```bash
-typst compile journal.typ --pdf-standard ua-1
-```
-
-This ensures your document is accessible to screen readers and other assistive technologies. When using this flag:
-
-- All images must have descriptive `alt` text (or be marked as decorative using `pdf.artifact`)
-- All equations must have alt text using the explicit syntax: `#math.equation(block: true, numbering: "(1)", $...$, alt: "description")`
-- Avoid embedding PDF images; use SVG or raster formats instead
-
-For more information on creating accessible documents, see the #link("https://typst.app/docs/guides/accessibility/")[Typst accessibility guide].
-
 == Figures on the first page
 
 The teaser figure should only have the width of the abstract as the template enforces it.
@@ -156,16 +140,6 @@ An example of the reference formatting is provided in the *References* section a
 All references which have a DOI should have it included in the bibTeX for the style to display.
 The DOI can be entered with or without the https://doi.org/ prefix.
 
-= Paper overview
-
-In this paper we introduce Typst, a new typesetting system designed to streamline the scientific writing process and provide researchers with a fast, efficient, and easy-to-use alternative to existing systems. Our goal is to shake up the status quo and offer researchers a better way to approach scientific writing. Here is a reference: @netwok2020.
-
-By leveraging advanced algorithms and a user-friendly interface, Typst offers several advantages over existing typesetting systems, including faster document creation, simplified syntax, and increased ease-of-use.
-
-To demonstrate the potential of Typst, we conducted a series of experiments comparing it to other popular typesetting systems, including LaTeX. Our findings suggest that Typst offers several benefits for scientific writing, particularly for novice users who may struggle with the complexities of LaTeX. Additionally, we demonstrate that Typst offers advanced features for experienced users, allowing for greater customization and flexibility in document creation.
-
-Overall, we believe that Typst represents a significant step forward in the field of scientific writing and typesetting, providing researchers with a valuable tool to streamline their workflow and focus on what really matters: their research. In the following sections, we will introduce Typst in more detail and provide evidence for its superiority over other typesetting systems in a variety of scenarios.
-
 = Equations and Tables
 
 Equations can be added like so:
@@ -192,6 +166,32 @@ Tables, such as @tab:example can also be included.
   ),
   caption: [Example table with conference paper counts. Numbers should be right aligned.]
 ) <tab:example>
+
+= Accessibility
+
+To create accessible PDFs that comply with PDF/UA (Universal Accessibility) standards, compile your document with the `--pdf-standard ua-1` flag:
+
+```bash
+typst compile journal.typ --pdf-standard ua-1
+```
+
+This ensures your document is accessible to screen readers and other assistive technologies. When using this flag:
+
+- All images must have descriptive `alt` text (or be marked as decorative using `pdf.artifact`)
+- All equations must have alt text using the explicit syntax: `#math.equation(block: true, numbering: "(1)", $...$, alt: "description")`
+- Avoid embedding PDF images; use SVG or raster formats instead
+
+For more information on creating accessible documents, see the #link("https://typst.app/docs/guides/accessibility/")[Typst accessibility guide].
+
+= Paper overview
+
+In this paper we introduce Typst, a new typesetting system designed to streamline the scientific writing process and provide researchers with a fast, efficient, and easy-to-use alternative to existing systems. Our goal is to shake up the status quo and offer researchers a better way to approach scientific writing. Here is a reference: @netwok2020.
+
+By leveraging advanced algorithms and a user-friendly interface, Typst offers several advantages over existing typesetting systems, including faster document creation, simplified syntax, and increased ease-of-use.
+
+To demonstrate the potential of Typst, we conducted a series of experiments comparing it to other popular typesetting systems, including LaTeX. Our findings suggest that Typst offers several benefits for scientific writing, particularly for novice users who may struggle with the complexities of LaTeX. Additionally, we demonstrate that Typst offers advanced features for experienced users, allowing for greater customization and flexibility in document creation.
+
+Overall, we believe that Typst represents a significant step forward in the field of scientific writing and typesetting, providing researchers with a valuable tool to streamline their workflow and focus on what really matters: their research. In the following sections, we will introduce Typst in more detail and provide evidence for its superiority over other typesetting systems in a variety of scenarios.
 
 = Methods
 #lorem(90)
