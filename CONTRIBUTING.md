@@ -36,7 +36,7 @@ If you don't want to use typship, you can link the current directory as a [Typst
 Run the following commands to create `preview.pdf` and `thumbnail.png`:
 
 ```bash
-typst compile template/journal.typ --root template/ preview.pdf
+typst compile template/journal.typ --root template/ preview.pdf --pdf-standard ua-1
 ```
 
 ```bash
