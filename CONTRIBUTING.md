@@ -58,4 +58,4 @@ Check the pull request and remove files that should not be part of it such as th
 
 ### Bumping versions
 
-After making a release, tag the released commit with the version number, e.g., `v0.0.1`. Then bump the version number in `typst.toml`, `template/journal.typ`, and `template/conference.typ` to the next version, e.g., `0.0.2`.
+After making a release, tag the released commit with the version number, e.g., `v0.0.1`. Then bump the version number in `typst.toml`, `template/journal.typ`, `template/conference.typ`, and the `README.md` to the next version, e.g., `0.0.2`.
