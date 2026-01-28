@@ -190,7 +190,7 @@
           #text(10pt, font: sans-serif-font)[
             #author.name
             #if "orcid" in author and author.orcid != "" {
-              link("https://orcid.org/" + author.orcid)[#box(height: 1.1em, baseline: 13.5%)[#image("assets/orcid.svg")]]
+              link("https://orcid.org/" + author.orcid)[#box(height: 1.1em, baseline: 13.5%)[#pdf.artifact[#image("assets/orcid.svg")]]]
             }
             #if "email" in author {
               footnote[#author.email]
@@ -424,7 +424,7 @@
       text(10pt, font: sans-serif-font, authors.map(author => {
           author.name
           if "orcid" in author and author.orcid != "" {
-            link("https://orcid.org/" + author.orcid)[#box(height: 1.1em, baseline: 13.5%)[#image("assets/orcid.svg")]]
+            link("https://orcid.org/" + author.orcid)[#box(height: 1.1em, baseline: 13.5%)[#pdf.artifact[#image("assets/orcid.svg")]]]
           }
         } ).join(", ", last: and-comma)
       )
@@ -458,7 +458,7 @@
   )
 
   v(10pt, weak: true)
-  align(center, image("assets/diamondrule.svg", width: 40%))
+  align(center, pdf.artifact[#image("assets/diamondrule.svg", width: 40%)])
   v(15pt, weak: true)
 
   // Start two column mode and configure paragraph properties.

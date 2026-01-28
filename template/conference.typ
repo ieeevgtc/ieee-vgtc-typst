@@ -63,11 +63,11 @@ For figures with images, the image format is usually detected automatically. For
 == Vector figures
 
 #figure(
-  image("figs/chart.pdf", alt: "A bar chart showing the number of days per month broken down by weather type.", width: 80%),
+  image("figs/chart.svg", alt: "A bar chart showing the number of days per month broken down by weather type.", width: 80%),
   caption: "Stacked bar chart of weather data.",
 )
 
-Vector graphics like SVG, PDF are best for charts and other figures with text or lines.
+Vector graphics like SVG and PDF are best for charts and other figures with text or lines.
 They will look much nicer and crisper and any text in them will be more selectable, searchable, and accessible.
 
 == Raster figures
@@ -84,6 +84,22 @@ Make sure all raster graphics are captured in high enough resolution so they loo
 == Alternative texts
 
 Always include an alternative text that describes the image. The alt text should not be the same as the caption, but should describe the image in a way that makes sense when the image is not visible.
+
+== Accessibility
+
+To create accessible PDFs that comply with PDF/UA (Universal Accessibility) standards, compile your document with the `--pdf-standard ua-1` flag:
+
+```bash
+typst compile conference.typ --pdf-standard ua-1
+```
+
+This ensures your document is accessible to screen readers and other assistive technologies. When using this flag:
+
+- All images must have descriptive `alt` text (or be marked as decorative using `pdf.artifact`)
+- All equations must have alt text using the explicit syntax: `#math.equation(block: true, numbering: "(1)", $...$, alt: "description")`
+- Avoid embedding PDF images; use SVG or raster formats instead
+
+For more information on creating accessible documents, see the #link("https://typst.app/docs/guides/accessibility/")[Typst accessibility guide].
 
 == Figures on the first page
 
@@ -152,7 +168,8 @@ Overall, we believe that Typst represents a significant step forward in the fiel
 
 Equations can be added like so:
 
-$ sum_(j=1)^z j = (z(z+1))/2 $ <eq:sum>
+// $ sum_(j=1)^z j = (z(z+1))/2 $ <eq:sum>
+#math.equation(block: true, numbering: "(1)", $sum_(j=1)^z j = (z(z+1))/2$, alt: "Sum from j equals 1 to z of j equals z times open parenthesis z plus 1 close parenthesis divided by 2") <eq:sum>
 
 Tables, such as @tab:example can also be included.
 
@@ -177,7 +194,8 @@ Tables, such as @tab:example can also be included.
 = Methods
 #lorem(90)
 
-$ a + b = gamma $
+// $ a + b = gamma $
+#math.equation(block: true, numbering: "(1)", $a + b = gamma$, alt: "a plus b equals gamma")
 
 #lorem(200)
 
