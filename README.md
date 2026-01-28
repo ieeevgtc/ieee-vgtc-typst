@@ -6,7 +6,7 @@ A [Typst](https://typst.app) template for IEEE VGTC (Visualization and Graphics 
 
 ## Usage
 
-You can use this template in the Typst web app by clicking "Start from template" on the dashboard and searching for ieee-vgtc.
+You can use this template in the Typst web app by clicking "Start from template" on the dashboard and searching for ieee-vgtc. You can also [create a project from the package from the Typst Universe](https://typst.app/universe/package/ieee-vgtc/).
 
 Alternatively, you can use the CLI to kick this project off using the command
 
