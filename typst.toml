@@ -1,6 +1,6 @@
 [package]
 name = "ieee-vgtc"
-version = "0.0.2"
+version = "0.0.3"
 compiler = "0.14.0"
 entrypoint = "lib.typ"
 repository = "https://github.com/ieeevgtc/ieee-vgtc-typst"

@@ -1,4 +1,4 @@
-#import "@preview/ieee-vgtc:0.0.2": journal
+#import "@preview/ieee-vgtc:0.0.3": journal
 
 #show: journal.with(
   // Set review: true to enable review mode (hides authors, shows submission info)
