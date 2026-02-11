@@ -214,7 +214,7 @@
   }
 
   // Two-column layout
-  show: columns.with(2, gutter: 24pt)
+  show: it => context if target() != "html" { columns(2, gutter: 12.24pt)[#it] } else { it }
   set par(justify: true, first-line-indent: 1em, leading: 0.55em, spacing: 0.55em)
   set text(font: serif-font, size: 9pt)
 
@@ -379,17 +379,19 @@
   set heading(numbering: "1.1.1")
   show heading: set text(font: sans-serif-font, size: 9pt, weight: "bold")
 
-  show heading.where(level: 1): it => {
-    let is-ack = it.body in ([Acknowledgments], [Acknowledgements])
+  context if target() != "html" {
+    show heading.where(level: 1): it => {
+      let is-ack = it.body in ([Acknowledgments], [Acknowledgements])
 
-    set par(first-line-indent: 0pt)
-    block(above: 12pt, below: 7.2pt)[
-      #if it.numbering != none and not is-ack {
-        numbering("1", ..counter(heading).get())
-        h(7pt, weak: true)
-      }
-      #render-smallcaps(it.body)
-    ]
+      set par(first-line-indent: 0pt)
+      block(above: 12pt, below: 7.2pt)[
+        #if it.numbering != none and not is-ack {
+          numbering("1", ..counter(heading).get())
+          h(7pt, weak: true)
+        }
+        #render-smallcaps(it.body)
+      ]
+    }
   }
 
   show heading.where(level: 2): it => {
@@ -407,7 +409,12 @@
 
   // Display the paper's title.
   v(3pt, weak: true)
-  align(center, text(18pt, title, font: sans-serif-font))
+  context if target() != "html" {
+    align(center, text(18pt, title, font: sans-serif-font))
+  } else {
+    heading(numbering: none)[#title]
+  } 
+
   v(23pt, weak: true)
 
   // Display the authors list or submission info (if review mode).
@@ -462,7 +469,7 @@
   v(15pt, weak: true)
 
   // Start two column mode and configure paragraph properties.
-  show: columns.with(2, gutter: 12.24pt) // 0.17in
+  show: it => context if target() != "html" { columns(2, gutter: 12.24pt)[#it] } else { it }
 
   // LaTeX uses 9pt font with 10pt baseline skip
   set par(justify: true, first-line-indent: 1em, leading: 0.55em, spacing: 0.65em)
