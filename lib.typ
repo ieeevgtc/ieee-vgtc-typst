@@ -155,7 +155,7 @@
 
   show heading.where(level: 3): it => {
     set par(first-line-indent: 0pt)
-    text(style: "italic", weight: "normal")[
+    text(style: "italic", weight: "regular")[
       #numbering("1.1.1)", ..counter(heading).get())
       #it.body:
     ]
@@ -401,7 +401,7 @@
 
   show heading.where(level: 3): it => {
     set par(first-line-indent: 0pt)
-    text(style: "italic", weight: "normal")[
+    text(style: "italic", weight: "regular")[
       #numbering("1.1.1)", ..counter(heading).get())
       #it.body:
     ]
