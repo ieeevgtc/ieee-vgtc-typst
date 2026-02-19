@@ -4,6 +4,7 @@
 #let serif-font = ("Times New Roman", "Liberation Serif")
 #let sans-serif-font = ("Helvetica", "Liberation Sans")
 #let mono-font = ("Liberation Mono") // LaTeX uses txtt
+#let narrow-font = ("PT Sans")
 
 // This function gets your whole document as its `body` and formats
 // it as a VGTC conference paper.
@@ -30,6 +31,9 @@
 
   // The result of a call to the `bibliography` function or `none`.
   bibliography: none,
+
+  // Whether DOIs in the bibliography should be displayed in narrow font
+  narrow-doi: false,
 
   // Review mode - hides authors and shows submission info
   review: false,
@@ -74,12 +78,19 @@
     }
   }
 
-  // Configure links
+  // Configure links to use NavyBlue color and monospace font (matching LaTeX hyperref/url settings)
   show link: it => {
-    set text(fill: rgb("#000080"))
+    set text(fill: rgb("#000080")) // NavyBlue (SVG color)
     if type(it.dest) == str {
-      set text(font: mono-font, size: 8pt)
-      it
+      if narrow-doi and regex("https:\\/\\/doi\\.org\\/") in it.dest {
+        // DOI links should use narrow font if narrow-doi option is enabled
+        set text(font: narrow-font, stretch: 50%, size: 9pt)
+        it
+      } else {
+        // Other URLs should use monospace font like LaTeX \url{}
+        set text(font: mono-font, size: 8pt)
+        it
+        }
     } else {
       it
     }
@@ -273,6 +284,9 @@
   // The result of a call to the `bibliography` function or `none`.
   bibliography: none,
 
+  // Whether DOIs in the bibliography should be displayed in narrow font
+  narrow-doi: false,
+
   // Review mode - hides authors and shows submission info
   review: false,
 
@@ -320,10 +334,16 @@
   // Configure links to use NavyBlue color and monospace font (matching LaTeX hyperref/url settings)
   show link: it => {
     set text(fill: rgb("#000080")) // NavyBlue (SVG color)
-    // URLs should use monospace font like LaTeX \url{}
     if type(it.dest) == str {
-      set text(font: mono-font, size: 8pt)
-      it
+      if narrow-doi and regex("https:\\/\\/doi\\.org\\/") in it.dest {
+        // DOI links should use narrow font if narrow-doi option is enabled
+        set text(font: narrow-font, stretch: 50%, size: 9pt)
+        it
+      } else {
+        // Other URLs should use monospace font like LaTeX \url{}
+        set text(font: mono-font, size: 8pt)
+        it
+        }
     } else {
       it
     }
