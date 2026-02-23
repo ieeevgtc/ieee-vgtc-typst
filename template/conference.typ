@@ -5,14 +5,6 @@
   review: false,
   submission-id: 1234,
   category: "Research",
-  // Please declare the paper type of your paper to help reviewers, only shown in review mode
-  // Choices:
-  // * algorithm/technique
-  // * application/design study
-  // * evaluation
-  // * system
-  // * theory/model
-  paper-type: "algorithm/technique",
   title: [Global Illumination for Fun and Profit],
   abstract: [#lorem(125) A free copy of this paper and all supplemental materials are available at https://OSF.IO/2NBSG.],
   authors: (
@@ -67,7 +59,7 @@ For figures with images, the image format is usually detected automatically. For
   caption: "Stacked bar chart of weather data.",
 )
 
-Vector graphics like SVG and PDF are best for charts and other figures with text or lines.
+Vector graphics like PDF and SVG are best for charts and other figures with text or lines.
 They will look much nicer and crisper and any text in them will be more selectable, searchable, and accessible.
 
 == Raster figures
@@ -135,8 +127,8 @@ An example of the reference formatting is provided in the *References* section a
 
 == Include DOIs
 
-All references which have a DOI should have it included in the bibTeX for the style to display.
-The DOI can be entered with or without the https://doi.org/ prefix.
+All references which have a DOI (which are virtually all entries of a list of references today), by default, should have it included in the bibliography file such that they are displayed in the list of references (as a courtesy for your reviewers and your readers).
+The DOI can be entered with or without the https://doi.org/ prefix. Note that you can also use short DOIs; see https://shortdoi.org/ to obtain a short version of any valid DOI.
 
 = Equations and Tables
 
@@ -149,20 +141,29 @@ Tables, such as @tab:example can also be included.
 
 #figure(
   table(
-    columns: 4,
-    align: (left, right, right, right),
+    columns: 5,
+    align: (left, right, right, right, right),
     stroke: (x, y) => (
       top: if y == 0 { 0.75pt } else if y == 1 { 0.5pt } else { 0pt },
       bottom: 1pt,
     ),
-    [*Year*], [*Vis/SciVis*], [*InfoVis*], [*VAST*],
-    [2016], [30], [37], [33],
-    [2015], [33], [38], [33],
-    [2014], [34], [45], [33],
-    [2013], [31], [38], [32],
-    [2012], [42], [44], [30],
+    [*Year*], [*VIS*], [*Vis/SciVis*], [*InfoVis*], [*VAST*],
+    [2025], [131], [], [], [],
+    [2024], [124], [], [], [],
+    [2023], [133], [], [], [],
+    [2022], [119], [], [], [],
+    [2021], [109], [], [], [],
+    [2020], [], [32], [64], [51],
+    [2019], [], [25], [53], [42],
+    [2018], [], [32], [47], [41],
+    [2017], [], [23], [39], [37],
+    [2016], [], [30], [37], [33],
+    [2015], [], [33], [38], [33],
+    [2014], [], [34], [45], [33],
+    [2013], [], [31], [38], [32],
+    [2012], [], [42], [44], [30],
   ),
-  caption: [Example table with conference paper counts. Numbers should be right aligned.]
+  caption: [VIS/VisWeek accepted/presented papers: 1990--2025, data from #link("https://www.vispubdata.org/")[vispubdata] @Isenberg2017Vispubdata. Numbers should be right aligned.]
 ) <tab:example>
 
 = Accessibility
@@ -180,6 +181,11 @@ This ensures your document is accessible to screen readers and other assistive t
 - Avoid embedding PDF images; use SVG or raster formats instead
 
 For more information on creating accessible documents, see the #link("https://typst.app/docs/guides/accessibility/")[Typst accessibility guide].
+
+= Reporting of User Studies
+
+Please note that for the reporting of any experimental results that involve human participants you are *required* to "include a statement in the article that the research was performed under the oversight of an institutional review board or equivalent local/regional body, including the official name of the IRB/ethics committee, or include an explanation as to why such a review was not conducted. For research involving human subjects, authors shall also report that consent from the human subjects in the research was obtained or explain why consent was not obtained" @IEEEPublications2025[Section 8.1.1.E]. Ideally, for an IRB approval or similar, you include the case number under which the permission was granted. For instance:
+"Our experiment was approved by our university's IRB (No. 12345678). [...] At the start of the experiment, we obtained informed consent from all participants, who filled in and signed a consent form (which we share in our additional materials)."
 
 = Paper overview
 

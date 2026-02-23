@@ -40,9 +40,6 @@
   // Category (for review mode)
   category: none,
 
-  // Paper type (for review mode)
-  paper-type: none,
-
   // Custom manuscript note (appears in footer of first page)
   manuscript-note: none,
 
@@ -177,8 +174,6 @@
   if review {
     align(center, text(10pt, font: sans-serif-font, [
       Category: #category
-      #v(-0.2em)
-      Paper Type: #paper-type
     ]))
   } else {
     set par(leading: 0.4em)
@@ -281,9 +276,6 @@
 
   // Category (for review mode)
   category: none,
-
-  // Paper type (for review mode)
-  paper-type: none,
 
   // Custom manuscript note (appears in footer of first page)
   manuscript-note: none,
@@ -413,7 +405,7 @@
     align(center, text(18pt, title, font: sans-serif-font))
   } else {
     heading(numbering: none)[#title]
-  } 
+  }
 
   v(23pt, weak: true)
 
@@ -421,8 +413,6 @@
   if review {
     align(center, text(10pt, font: sans-serif-font, [
       Category: #category
-      #v(-0.2em)
-      Paper Type: #paper-type
     ]))
   } else {
     let and-comma = if authors.len() == 2 {" and "} else {", and "}
