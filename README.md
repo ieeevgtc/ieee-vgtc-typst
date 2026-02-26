@@ -47,7 +47,6 @@ The `journal` function has the following named arguments:
 - `review`: Review mode flag. When set to `true`, hides author information and displays submission details instead. Defaults to `false`.
 - `submission-id`: Submission ID number displayed in the header when `review` is `true`.
 - `category`: Category displayed in place of authors when `review` is `true`.
-- `paper-type`: Paper type displayed in place of authors when `review` is `true`.
 - `manuscript-note`: Custom manuscript note that appears in the footer of the first page. If `none`, a standard IEEE manuscript template note is shown.
 - `body`: The paper's content.
 
@@ -65,7 +64,6 @@ The `conference` function has the following named arguments:
 - `review`: Review mode flag. When set to `true`, hides author information and displays submission details instead. Defaults to `false`.
 - `submission-id`: Submission ID number displayed in the header when `review` is `true`.
 - `category`: Category displayed in place of authors when `review` is `true`.
-- `paper-type`: Paper type displayed in place of authors when `review` is `true`. Options include: `"algorithm/technique"`, `"application/design study"`, `"evaluation"`, `"system"`, `"theory/model"`.
 - `manuscript-note`: Custom manuscript note (not typically used for conference papers).
 - `body`: The paper's content.
 
