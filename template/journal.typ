@@ -61,7 +61,7 @@ For figures with images, the image format is usually detected automatically. For
   caption: "Stacked bar chart of weather data.",
 )
 
-Vector graphics like PDF and SVG are best for charts and other figures with text or lines.
+Vector graphics like SVG and PDF are best for charts and other figures with text or lines.
 They will look much nicer and crisper and any text in them will be more selectable, searchable, and accessible.
 
 == Raster figures
