@@ -1,7 +1,27 @@
 // Workaround for the lack of an `std` scope.
 #let std-bibliography = bibliography
 
-#import "@preview/bullseye:0.1.0": show-target, on-target
+// Minimal bullseye-compatible target switching (avoids external dependency)
+#let get-target() = {
+  if "target" in dictionary(std) { std.target() }
+  else { "paged" }
+}
+
+#let match-target(..targets) = {
+  let targets = targets.named()
+  let current = get-target()
+  if current in targets { targets.at(current) }
+  else if "default" in targets { targets.default }
+  else { none }
+}
+
+#let show-target(..targets) = body => context {
+  match-target(default: it => it, ..targets)(body)
+}
+
+#let on-target(..targets) = context {
+  match-target(default: none, ..targets)
+}
 
 #let serif-font = ("Times New Roman", "Liberation Serif")
 #let sans-serif-font = ("Helvetica", "Liberation Sans")
