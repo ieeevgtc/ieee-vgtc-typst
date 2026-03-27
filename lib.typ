@@ -84,15 +84,29 @@
   // Custom small caps with dual sizing (hack for fonts without small caps)
   // TODO: Remove when Typst implements synthetic small caps: https://github.com/typst/typst/issues/7009
   let render-smallcaps(body) = {
+    let render-letter(letter) = {
+      if letter == upper(letter) {
+        text(size: 9pt, letter)
+      } else {
+        text(size: 7pt, upper(letter))
+      }
+      h(0.45pt) // hack to increase tracking
+    }
+    
     if body.has("text") {
       for letter in body.text {
-        if letter == upper(letter) {
-          text(size: 9pt, letter)
-        } else {
-          text(size: 7pt, upper(letter))
-        }
+        render-letter(letter)
+      }
+    } else if body.has("children") {
+      for part in body.children {
+        if part.has("text") {
+          for letter in part.text {
+            render-letter(letter)
+          }
+        } else [ ]
       }
     } else {
+      show smallcaps: set text(tracking: 0.45pt)
       smallcaps(body)
     }
   }
