@@ -522,7 +522,11 @@
       // Display abstract and index terms.
       // LaTeX uses \scriptsize (8pt with 9.5pt leading)
       #(if abstract != none [
-          #set par(justify: true, leading: 0.45em)
+          #set par(justify: true, leading: 0.45em,
+            justification-limits: (
+              tracking: (min: -0.01em, max: 0.02em),
+            )
+          )
           #set text(font: sans-serif-font, size: 8pt)
           #[*Abstract*---#abstract]
 
@@ -542,7 +546,11 @@
   show: show-target(paged: it => columns(2, gutter: 12.24pt)[#it])
 
   // LaTeX uses 9pt font with 10pt baseline skip
-  set par(justify: true, first-line-indent: 1em, leading: 0.45em, spacing: 0.45em)
+  set par(justify: true, first-line-indent: 1em, leading: 0.45em, spacing: 0.45em,
+      justification-limits: (
+        tracking: (min: -0.01em, max: 0.02em),
+      )
+  )
 
   // Footer with author info
   if not review {
