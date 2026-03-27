@@ -417,13 +417,29 @@
     let is-ack = it.body in ([Acknowledgments], [Acknowledgements])
 
     set par(first-line-indent: 0pt)
-    block(above: 12pt, below: 7.2pt)[
-      #if it.numbering != none and not is-ack {
-        numbering("1", ..counter(heading).get())
-        h(7pt, weak: true)
-      }
-      #render-smallcaps(it.body)
-    ]
+    
+    if (counter(heading).get() == (1,)) {
+      // first heading is full width
+      place(
+        top + left,
+        float: true,
+        scope: "parent",
+        {
+          numbering("1", ..counter(heading).get())
+          h(9pt, weak: true)
+          render-smallcaps(it.body)
+          v(-6pt)
+        },
+      )
+    } else {
+      block(above: 14pt, below: 7.6pt, {
+        if it.numbering != none and not is-ack {
+          numbering("1", ..counter(heading).get())
+          h(9pt, weak: true)
+        }
+        render-smallcaps(it.body)
+      })
+    }
   })
 
   show heading.where(level: 2): it => {
