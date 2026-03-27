@@ -84,15 +84,29 @@
   // Custom small caps with dual sizing (hack for fonts without small caps)
   // TODO: Remove when Typst implements synthetic small caps: https://github.com/typst/typst/issues/7009
   let render-smallcaps(body) = {
+    let render-letter(letter) = {
+      if letter == upper(letter) {
+        text(size: 9pt, letter)
+      } else {
+        text(size: 7pt, upper(letter))
+      }
+      h(0.45pt) // hack to increase tracking
+    }
+    
     if body.has("text") {
       for letter in body.text {
-        if letter == upper(letter) {
-          text(size: 9pt, letter)
-        } else {
-          text(size: 7pt, upper(letter))
-        }
+        render-letter(letter)
+      }
+    } else if body.has("children") {
+      for part in body.children {
+        if part.has("text") {
+          for letter in part.text {
+            render-letter(letter)
+          }
+        } else [ ]
       }
     } else {
+      show smallcaps: set text(tracking: 0.45pt)
       smallcaps(body)
     }
   }
@@ -332,15 +346,29 @@
   // Custom small caps with dual sizing (hack for fonts without small caps)
   // TODO: Remove when Typst implements synthetic small caps: https://github.com/typst/typst/issues/7009
   let render-smallcaps(body) = {
+    let render-letter(letter) = {
+      if letter == upper(letter) {
+        text(size: 9pt, letter)
+      } else {
+        text(size: 7pt, upper(letter))
+      }
+      h(0.45pt) // hack to increase tracking
+    }
+    
     if body.has("text") {
       for letter in body.text {
-        if letter == upper(letter) {
-          text(size: 9pt, letter)
-        } else {
-          text(size: 7pt, upper(letter))
-        }
+        render-letter(letter)
+      }
+    } else if body.has("children") {
+      for part in body.children {
+        if part.has("text") {
+          for letter in part.text {
+            render-letter(letter)
+          }
+        } else [ ]
       }
     } else {
+      show smallcaps: set text(tracking: 0.45pt)
       smallcaps(body)
     }
   }
@@ -417,13 +445,29 @@
     let is-ack = it.body in ([Acknowledgments], [Acknowledgements])
 
     set par(first-line-indent: 0pt)
-    block(above: 12pt, below: 7.2pt)[
-      #if it.numbering != none and not is-ack {
-        numbering("1", ..counter(heading).get())
-        h(7pt, weak: true)
-      }
-      #render-smallcaps(it.body)
-    ]
+    
+    if (counter(heading).get() == (1,)) {
+      // first heading is full width
+      place(
+        top + left,
+        float: true,
+        scope: "parent",
+        {
+          numbering("1", ..counter(heading).get())
+          h(9pt, weak: true)
+          render-smallcaps(it.body)
+          v(-6pt)
+        },
+      )
+    } else {
+      block(above: 14pt, below: 7.6pt, {
+        if it.numbering != none and not is-ack {
+          numbering("1", ..counter(heading).get())
+          h(9pt, weak: true)
+        }
+        render-smallcaps(it.body)
+      })
+    }
   })
 
   show heading.where(level: 2): it => {
