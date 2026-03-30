@@ -117,7 +117,7 @@
     if type(it.dest) == str {
       if narrow-doi and regex("https:\\/\\/doi\\.org\\/") in it.dest {
         // DOI links should use narrow font if narrow-doi option is enabled
-        set text(font: narrow-font, stretch: 50%, size: 9pt)
+        set text(font: narrow-font, stretch: 50%, size: 8pt)
         it
       } else {
         // Other URLs should use monospace font like LaTeX \url{}
@@ -176,7 +176,7 @@
   }
 
   // Configure headings
-  set heading(numbering: "1.1.1")
+  set heading(numbering: (..n) => numbering("1.1.1", ..n) + h(4pt))
   show heading: set text(font: sans-serif-font, size: 9pt, weight: "bold")
 
   show heading.where(level: 1): it => {
@@ -379,7 +379,7 @@
     if type(it.dest) == str {
       if narrow-doi and regex("https:\\/\\/doi\\.org\\/") in it.dest {
         // DOI links should use narrow font if narrow-doi option is enabled
-        set text(font: narrow-font, stretch: 50%, size: 9pt)
+        set text(font: narrow-font, stretch: 50%, size: 8pt)
         it
       } else {
         // Other URLs should use monospace font like LaTeX \url{}
@@ -431,14 +431,16 @@
   set list(indent: 10pt, body-indent: 9pt)
 
   // Configure figures
-  set figure(gap: 10pt)
+  set figure(gap: 10pt, supplement: "Fig.")
   show figure.caption: it => {
+    set align(left)
     set text(font: sans-serif-font, size: 8pt)
     it
+    v(12pt)
   }
 
   // Configure headings
-  set heading(numbering: "1.1.1")
+  set heading(numbering: (..n) => numbering("1.1.1", ..n) + h(4pt))
   show heading: set text(font: sans-serif-font, size: 9pt, weight: "bold")
 
   show heading.where(level: 1): show-target(paged: it => {
@@ -477,10 +479,8 @@
 
   show heading.where(level: 3): it => {
     set par(first-line-indent: 0pt)
-    text(weight: "regular")[
-      #numbering("1.1.1", ..counter(heading).get())
-      #it.body
-    ]
+    show block: set text(weight: "regular")
+    block(above: 12pt, below: 7.2pt, it)
   }
 
   // Display the paper's title.
