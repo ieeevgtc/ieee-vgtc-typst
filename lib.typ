@@ -433,8 +433,10 @@
   // Configure figures
   set figure(gap: 10pt)
   show figure.caption: it => {
+    set align(left)
     set text(font: sans-serif-font, size: 8pt)
     it
+    v(12pt)
   }
 
   // Configure headings
