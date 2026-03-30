@@ -176,7 +176,7 @@
   }
 
   // Configure headings
-  set heading(numbering: "1.1.1")
+  set heading(numbering: (..n) => numbering("1.1.1", ..n) + h(4pt))
   show heading: set text(font: sans-serif-font, size: 9pt, weight: "bold")
 
   show heading.where(level: 1): it => {
@@ -440,7 +440,7 @@
   }
 
   // Configure headings
-  set heading(numbering: "1.1.1")
+  set heading(numbering: (..n) => numbering("1.1.1", ..n) + h(4pt))
   show heading: set text(font: sans-serif-font, size: 9pt, weight: "bold")
 
   show heading.where(level: 1): show-target(paged: it => {
