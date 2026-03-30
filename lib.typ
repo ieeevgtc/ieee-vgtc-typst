@@ -431,7 +431,7 @@
   set list(indent: 10pt, body-indent: 9pt)
 
   // Configure figures
-  set figure(gap: 10pt)
+  set figure(gap: 10pt, supplement: "Fig.")
   show figure.caption: it => {
     set align(left)
     set text(font: sans-serif-font, size: 8pt)
