@@ -479,10 +479,8 @@
 
   show heading.where(level: 3): it => {
     set par(first-line-indent: 0pt)
-    text(weight: "regular")[
-      #numbering("1.1.1", ..counter(heading).get())
-      #it.body
-    ]
+    show block: set text(weight: "regular")
+    block(above: 12pt, below: 7.2pt, it)
   }
 
   // Display the paper's title.
