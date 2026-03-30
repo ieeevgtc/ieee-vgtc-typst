@@ -117,7 +117,7 @@
     if type(it.dest) == str {
       if narrow-doi and regex("https:\\/\\/doi\\.org\\/") in it.dest {
         // DOI links should use narrow font if narrow-doi option is enabled
-        set text(font: narrow-font, stretch: 50%, size: 9pt)
+        set text(font: narrow-font, stretch: 50%, size: 8pt)
         it
       } else {
         // Other URLs should use monospace font like LaTeX \url{}
@@ -379,7 +379,7 @@
     if type(it.dest) == str {
       if narrow-doi and regex("https:\\/\\/doi\\.org\\/") in it.dest {
         // DOI links should use narrow font if narrow-doi option is enabled
-        set text(font: narrow-font, stretch: 50%, size: 9pt)
+        set text(font: narrow-font, stretch: 50%, size: 8pt)
         it
       } else {
         // Other URLs should use monospace font like LaTeX \url{}
