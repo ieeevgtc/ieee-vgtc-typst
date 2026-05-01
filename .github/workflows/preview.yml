@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout PR
         uses: actions/checkout@v4
@@ -38,14 +38,21 @@ jobs:
         if: steps.check.outputs.skip != 'true'
         run: |
           version=$(grep '^version' typst.toml | cut -d'"' -f2)
-          mkdir -p "$HOME/.local/share/typst/packages/preview/ieee-vgtc/"
-          ln -s "$GITHUB_WORKSPACE" "$HOME/.local/share/typst/packages/preview/ieee-vgtc/$version"
+          mkdir -p "$HOME/Library/Application Support/typst/packages/preview/ieee-vgtc/"
+          ln -s "$GITHUB_WORKSPACE" "$HOME/Library/Application Support/typst/packages/preview/ieee-vgtc/$version"
+
+      - name: Install oxipng
+        if: steps.check.outputs.skip != 'true'
+        uses: baptiste0928/cargo-install@v3
+        with:
+          crate: oxipng
 
       - name: Build preview and thumbnail
         if: steps.check.outputs.skip != 'true'
         run: |
           typst compile template/journal.typ --root template/ preview.pdf --pdf-standard ua-1
           typst compile -f png --pages 1 --ppi 250 template/journal.typ --root template/ thumbnail.png
+          oxipng -o 4 --strip safe --alpha thumbnail.png
 
       - name: Check for changes
         if: steps.check.outputs.skip != 'true'
