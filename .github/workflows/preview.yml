@@ -1,0 +1,116 @@
+name: Build Preview
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Skip if preview update commit
+        id: check
+        run: |
+          if [ "$(git log -1 --format='%an')" = "github-actions[bot]" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Typst
+        if: steps.check.outputs.skip != 'true'
+        uses: typst-community/setup-typst@v4
+
+      - name: Setup local package
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          version=$(grep '^version' typst.toml | cut -d'"' -f2)
+          mkdir -p "$HOME/.local/share/typst/packages/preview/ieee-vgtc/"
+          ln -s "$GITHUB_WORKSPACE" "$HOME/.local/share/typst/packages/preview/ieee-vgtc/$version"
+
+      - name: Build preview and thumbnail
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          typst compile template/journal.typ --root template/ preview.pdf --pdf-standard ua-1
+          typst compile -f png --pages 1 --ppi 250 template/journal.typ --root template/ thumbnail.png
+
+      - name: Check for changes
+        if: steps.check.outputs.skip != 'true'
+        id: diff
+        run: |
+          if git diff --quiet -- preview.pdf thumbnail.png; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload artifacts
+        if: steps.check.outputs.skip != 'true' && steps.diff.outputs.changed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: preview
+          path: |
+            preview.pdf
+            thumbnail.png
+
+      - name: Push to PR branch
+        if: steps.check.outputs.skip != 'true' && steps.diff.outputs.changed == 'true' && github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add preview.pdf thumbnail.png
+          git commit -m "Update preview and thumbnail"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+
+      - name: Comment on fork PR
+        if: steps.check.outputs.skip != 'true' && steps.diff.outputs.changed == 'true' && github.event.pull_request.head.repo.full_name != github.repository
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = [
+              '### Preview updated',
+              '',
+              `The preview PDF and thumbnail have been rebuilt for commit \`${context.payload.pull_request.head.sha.slice(0, 7)}\`.`,
+              '',
+              `**[Download preview artifacts](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})**`,
+              '',
+              '_Since this PR is from a fork, the preview files cannot be committed automatically. A maintainer will update them before merging._',
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find(c =>
+              c.user.login === 'github-actions[bot]' && c.body.includes('Preview updated')
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
