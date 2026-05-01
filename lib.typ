@@ -28,6 +28,56 @@
 #let mono-font = ("Liberation Mono") // LaTeX uses txtt
 #let narrow-font = ("PT Sans")
 
+// Formatting that is identical for both conference and journal templates below
+
+// Custom small caps with dual sizing (hack for fonts without small caps)
+// TODO: Remove when Typst implements synthetic small caps: https://github.com/typst/typst/issues/7009
+#let render-smallcaps(body) = {
+  let render-letter(letter) = {
+    if letter == upper(letter) {
+      text(size: 9pt, letter)
+    } else {
+      text(size: 7pt, upper(letter))
+    }
+    h(0.45pt) // hack to increase tracking
+  }
+  
+  if body.has("text") {
+    for letter in body.text {
+      render-letter(letter)
+    }
+  } else if body.has("children") {
+    for part in body.children {
+      if part.has("text") {
+        for letter in part.text {
+          render-letter(letter)
+        }
+      } else [ ]
+    }
+  } else {
+    show smallcaps: set text(tracking: 0.45pt)
+    smallcaps(body)
+  }
+}
+
+// Configure links to use NavyBlue color and monospace font (matching LaTeX hyperref/url settings)
+#let link-formatting = (it, narrow-doi) => {
+  set text(fill: rgb("#000080")) // NavyBlue (SVG color)
+  if type(it.dest) == str {
+    if narrow-doi and regex("https:\\/\\/doi\\.org\\/") in it.dest {
+      // DOI links should use narrow font if narrow-doi option is enabled
+      set text(font: narrow-font, stretch: 50%, size: 8pt)
+      it
+    } else {
+      // Other URLs should use monospace font like LaTeX \url{}
+      set text(font: mono-font, size: 8pt)
+      it
+    }
+  } else {
+    it
+  }
+}
+
 // This function gets your whole document as its `body` and formats
 // it as a VGTC conference paper.
 #let conference(
@@ -79,55 +129,11 @@
     set document(title: title, author: authors.map(author => author.name))
   }
 
+  // Set the body font.
   set text(font: serif-font, size: 9pt)
 
-  // Custom small caps with dual sizing (hack for fonts without small caps)
-  // TODO: Remove when Typst implements synthetic small caps: https://github.com/typst/typst/issues/7009
-  let render-smallcaps(body) = {
-    let render-letter(letter) = {
-      if letter == upper(letter) {
-        text(size: 9pt, letter)
-      } else {
-        text(size: 7pt, upper(letter))
-      }
-      h(0.45pt) // hack to increase tracking
-    }
-    
-    if body.has("text") {
-      for letter in body.text {
-        render-letter(letter)
-      }
-    } else if body.has("children") {
-      for part in body.children {
-        if part.has("text") {
-          for letter in part.text {
-            render-letter(letter)
-          }
-        } else [ ]
-      }
-    } else {
-      show smallcaps: set text(tracking: 0.45pt)
-      smallcaps(body)
-    }
-  }
-
-  // Configure links to use NavyBlue color and monospace font (matching LaTeX hyperref/url settings)
-  show link: it => {
-    set text(fill: rgb("#000080")) // NavyBlue (SVG color)
-    if type(it.dest) == str {
-      if narrow-doi and regex("https:\\/\\/doi\\.org\\/") in it.dest {
-        // DOI links should use narrow font if narrow-doi option is enabled
-        set text(font: narrow-font, stretch: 50%, size: 8pt)
-        it
-      } else {
-        // Other URLs should use monospace font like LaTeX \url{}
-        set text(font: mono-font, size: 8pt)
-        it
-        }
-    } else {
-      it
-    }
-  }
+  // Apply link styling.
+  show link: it => link-formatting(it, narrow-doi)
 
   // Configure page
   set page(
@@ -258,7 +264,6 @@
   // Two-column layout
   show: show-target(paged: it => columns(2, gutter: 12.24pt)[#it])
   set par(justify: true, first-line-indent: 1em, leading: 0.45em, spacing: 0.45em)
-  set text(font: serif-font, size: 9pt)
 
   // Abstract
   if abstract != none {
@@ -343,53 +348,8 @@
   // Set the body font.
   set text(font: serif-font, size: 9pt)
 
-  // Custom small caps with dual sizing (hack for fonts without small caps)
-  // TODO: Remove when Typst implements synthetic small caps: https://github.com/typst/typst/issues/7009
-  let render-smallcaps(body) = {
-    let render-letter(letter) = {
-      if letter == upper(letter) {
-        text(size: 9pt, letter)
-      } else {
-        text(size: 7pt, upper(letter))
-      }
-      h(0.45pt) // hack to increase tracking
-    }
-    
-    if body.has("text") {
-      for letter in body.text {
-        render-letter(letter)
-      }
-    } else if body.has("children") {
-      for part in body.children {
-        if part.has("text") {
-          for letter in part.text {
-            render-letter(letter)
-          }
-        } else [ ]
-      }
-    } else {
-      show smallcaps: set text(tracking: 0.45pt)
-      smallcaps(body)
-    }
-  }
-
-  // Configure links to use NavyBlue color and monospace font (matching LaTeX hyperref/url settings)
-  show link: it => {
-    set text(fill: rgb("#000080")) // NavyBlue (SVG color)
-    if type(it.dest) == str {
-      if narrow-doi and regex("https:\\/\\/doi\\.org\\/") in it.dest {
-        // DOI links should use narrow font if narrow-doi option is enabled
-        set text(font: narrow-font, stretch: 50%, size: 8pt)
-        it
-      } else {
-        // Other URLs should use monospace font like LaTeX \url{}
-        set text(font: mono-font, size: 8pt)
-        it
-        }
-    } else {
-      it
-    }
-  }
+  // Apply link styling.
+  show link: it => link-formatting(it, narrow-doi)
 
   // Configure the page.
   set page(
@@ -576,8 +536,6 @@
       )
     )
   }
-
-  set text(font: serif-font, size: 9pt)
 
   body
 
