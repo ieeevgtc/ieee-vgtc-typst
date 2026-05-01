@@ -30,6 +30,10 @@ jobs:
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Save old preview PDF
+        if: steps.check.outputs.skip != 'true'
+        run: cp preview.pdf old-preview.pdf
+
       - name: Setup Typst
         if: steps.check.outputs.skip != 'true'
         uses: typst-community/setup-typst@v4
@@ -41,11 +45,9 @@ jobs:
           mkdir -p "$HOME/Library/Application Support/typst/packages/preview/ieee-vgtc/"
           ln -s "$GITHUB_WORKSPACE" "$HOME/Library/Application Support/typst/packages/preview/ieee-vgtc/$version"
 
-      - name: Install oxipng
+      - name: Install oxipng and poppler
         if: steps.check.outputs.skip != 'true'
-        uses: baptiste0928/cargo-install@v3
-        with:
-          crate: oxipng
+        run: brew install oxipng poppler
 
       - name: Build preview and thumbnail
         if: steps.check.outputs.skip != 'true'
@@ -54,18 +56,29 @@ jobs:
           typst compile -f png --pages 1 --ppi 250 template/journal.typ --root template/ thumbnail.png
           oxipng -o 4 --strip safe --alpha thumbnail.png
 
-      - name: Check for changes
+      - name: Check for visual changes
         if: steps.check.outputs.skip != 'true'
         id: diff
         run: |
-          if git diff --quiet -- preview.pdf thumbnail.png; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
+          # Compare thumbnail directly (PNGs are deterministic)
+          if git diff --quiet -- thumbnail.png; then
+            echo "thumb_changed=false" >> "$GITHUB_OUTPUT"
           else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "thumb_changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+          # Compare PDF by rendering all pages to PNGs (ignores metadata-only changes)
+          mkdir -p old-pages new-pages
+          pdftoppm -png -r 150 old-preview.pdf old-pages/page
+          pdftoppm -png -r 150 preview.pdf new-pages/page
+          if diff -r old-pages new-pages > /dev/null 2>&1; then
+            echo "pdf_changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "pdf_changed=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Upload artifacts
-        if: steps.check.outputs.skip != 'true' && steps.diff.outputs.changed == 'true'
+        if: steps.check.outputs.skip != 'true' && (steps.diff.outputs.thumb_changed == 'true' || steps.diff.outputs.pdf_changed == 'true')
         uses: actions/upload-artifact@v4
         with:
           name: preview
@@ -74,16 +87,21 @@ jobs:
             thumbnail.png
 
       - name: Push to PR branch
-        if: steps.check.outputs.skip != 'true' && steps.diff.outputs.changed == 'true' && github.event.pull_request.head.repo.full_name == github.repository
+        if: steps.check.outputs.skip != 'true' && (steps.diff.outputs.thumb_changed == 'true' || steps.diff.outputs.pdf_changed == 'true') && github.event.pull_request.head.repo.full_name == github.repository
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add preview.pdf thumbnail.png
+          if [ "${{ steps.diff.outputs.thumb_changed }}" = "true" ]; then
+            git add thumbnail.png
+          fi
+          if [ "${{ steps.diff.outputs.pdf_changed }}" = "true" ]; then
+            git add preview.pdf
+          fi
           git commit -m "Update preview and thumbnail"
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
 
       - name: Comment on fork PR
-        if: steps.check.outputs.skip != 'true' && steps.diff.outputs.changed == 'true' && github.event.pull_request.head.repo.full_name != github.repository
+        if: steps.check.outputs.skip != 'true' && (steps.diff.outputs.thumb_changed == 'true' || steps.diff.outputs.pdf_changed == 'true') && github.event.pull_request.head.repo.full_name != github.repository
         uses: actions/github-script@v7
         with:
           script: |
