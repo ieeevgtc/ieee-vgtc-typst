@@ -47,7 +47,7 @@ jobs:
 
       - name: Install oxipng and poppler
         if: steps.check.outputs.skip != 'true'
-        run: brew install oxipng poppler
+        run: brew install oxipng poppler font-liberation
 
       - name: Build preview and thumbnail
         if: steps.check.outputs.skip != 'true'
