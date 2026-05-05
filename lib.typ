@@ -121,7 +121,6 @@
     }
     set align(my-align)
     it
-    v(12pt)
   })
 }
 
@@ -223,6 +222,7 @@
 
   // Configure figures and tables
   set figure(gap: 10pt, supplement: "Fig.")
+  show figure: set block(spacing: 12pt)
   show figure.where(kind: table): set figure(supplement: "Tab.")
   show figure.where(kind: table): set figure.caption(position: top)
   show figure.caption: it => {
@@ -416,6 +416,7 @@
 
   // Configure figures
   set figure(gap: 10pt, supplement: "Fig.")
+  show figure: set block(spacing: 12pt)
   show figure.caption: format-caption
 
   // Configure tables
