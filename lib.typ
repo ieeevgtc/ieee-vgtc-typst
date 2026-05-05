@@ -60,8 +60,35 @@
   }
 }
 
+// Headings
+#let format-heading-1 = it => {
+  let is-ack = it.body in ([Acknowledgments], [Acknowledgements])
+  
+  set par(first-line-indent: 0pt)
+  set text(weight: "bold")
+  
+  block(above: 14pt, below: 7.6pt, {
+    if it.numbering != none and not is-ack {
+      counter(heading).display()
+      h(9pt, weak: true)
+    }
+    render-smallcaps(it.body)
+  })
+}
+
+#let format-heading-2 = it => {
+    set par(first-line-indent: 0pt)
+    set text(weight: "bold")
+    block(above: 12pt, below: 7.2pt)[#counter(heading).display()#h(8pt)#it.body]
+  }
+
+#let format-heading-3 = it => {
+    set par(first-line-indent: 0pt)
+    block(above: 12pt, below: 7.2pt)[#counter(heading).display()#h(8pt)#it.body]
+  }
+
 // Configure links to use NavyBlue color and monospace font (matching LaTeX hyperref/url settings)
-#let link-formatting = (it, narrow-doi) => {
+#let format-link = (it, narrow-doi) => {
   set text(fill: rgb("#000080")) // NavyBlue (SVG color)
   if type(it.dest) == str {
     if narrow-doi and regex("https:\\/\\/doi\\.org\\/") in it.dest {
@@ -78,7 +105,7 @@
   }
 }
 
-#let caption-formatting = it => {
+#let format-caption = it => {
   set text(font: sans-serif-font, size: 8pt)
   set par(justify: true)
   set block(width: 100%) // to ensure justified text uses full width
@@ -153,7 +180,7 @@
   set text(font: serif-font, size: 9pt)
 
   // Apply link styling.
-  show link: it => link-formatting(it, narrow-doi)
+  show link: it => format-link(it, narrow-doi)
 
   // Configure page
   set page(
@@ -204,38 +231,16 @@
     if it.kind == table {my-supplement = "Table"}
     else {my-supplement = "Figure"}
 
-    caption-formatting([#my-supplement~#it.counter.display()#it.separator#it.body])
+    format-caption([#my-supplement~#it.counter.display()#it.separator#it.body])
   }
 
   // Configure headings
-  set heading(numbering: (..n) => numbering("1.1.1", ..n) + h(4pt))
-  show heading: set text(font: sans-serif-font, size: 9pt, weight: "bold")
+  set heading(numbering: "1.1.1")
+  show heading: set text(font: sans-serif-font, size: 9pt, weight: "regular")
 
-  show heading.where(level: 1): it => {
-    let is-ack = it.body in ([Acknowledgments], [Acknowledgements])
-
-    set par(first-line-indent: 0pt)
-    block(above: 12pt, below: 7.2pt)[
-      #if it.numbering != none and not is-ack {
-        numbering("1", ..counter(heading).get())
-        h(7pt, weak: true)
-      }
-      #render-smallcaps(it.body)
-    ]
-  }
-
-  show heading.where(level: 2): it => {
-    set par(first-line-indent: 0pt)
-    block(above: 12pt, below: 7.2pt, it)
-  }
-
-  show heading.where(level: 3): it => {
-    set par(first-line-indent: 0pt)
-    text(weight: "regular")[
-      #numbering("1.1.1", ..counter(heading).get())
-      #it.body
-    ]
-  }
+  show heading.where(level: 1): format-heading-1
+  show heading.where(level: 2): format-heading-2
+  show heading.where(level: 3): format-heading-3
 
   // Title
   v(42pt, weak: true)
@@ -368,7 +373,7 @@
   set text(font: serif-font, size: 9pt)
 
   // Apply link styling.
-  show link: it => link-formatting(it, narrow-doi)
+  show link: it => format-link(it, narrow-doi)
 
   // Configure the page.
   set page(
@@ -411,55 +416,35 @@
 
   // Configure figures
   set figure(gap: 10pt, supplement: "Fig.")
-  show figure.caption: caption-formatting
+  show figure.caption: format-caption
 
   // Configure tables
   show figure.where(kind: table): set figure(supplement: "Tab.")
   show figure.where(kind: table): set figure.caption(position: top)
 
   // Configure headings
-  set heading(numbering: (..n) => numbering("1.1.1", ..n) + h(4pt))
-  show heading: set text(font: sans-serif-font, size: 9pt, weight: "bold")
+  set heading(numbering: "1.1.1")
+  show heading: set text(font: sans-serif-font, size: 9pt, weight: "regular")
 
-  show heading.where(level: 1): show-target(paged: it => {
-    let is-ack = it.body in ([Acknowledgments], [Acknowledgements])
-
-    set par(first-line-indent: 0pt)
-    
+  show heading.where(level: 1): show-target(paged: it => {    
+    // specific to journal template: first heading is full width
     if (counter(heading).get() == (1,)) {
-      // first heading is full width
       place(
         top + left,
         float: true,
         scope: "parent",
         {
-          numbering("1", ..counter(heading).get())
-          h(9pt, weak: true)
-          render-smallcaps(it.body)
+          format-heading-1(it)
           v(-6pt)
         },
       )
     } else {
-      block(above: 14pt, below: 7.6pt, {
-        if it.numbering != none and not is-ack {
-          numbering("1", ..counter(heading).get())
-          h(9pt, weak: true)
-        }
-        render-smallcaps(it.body)
-      })
+      format-heading-1(it)
     }
   })
 
-  show heading.where(level: 2): it => {
-    set par(first-line-indent: 0pt)
-    block(above: 12pt, below: 7.2pt, it)
-  }
-
-  show heading.where(level: 3): it => {
-    set par(first-line-indent: 0pt)
-    show block: set text(weight: "regular")
-    block(above: 12pt, below: 7.2pt, it)
-  }
+  show heading.where(level: 2): format-heading-2
+  show heading.where(level: 3): format-heading-3
 
   // Display the paper's title.
   v(3pt, weak: true)
