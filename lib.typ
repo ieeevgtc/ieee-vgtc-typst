@@ -78,6 +78,26 @@
   }
 }
 
+#let caption-formatting = it => {
+  set text(font: sans-serif-font, size: 8pt)
+  set par(justify: true)
+  set block(width: 100%) // to ensure justified text uses full width
+  
+  // one-liner captions are centered, longer captions are left-aligned
+  layout(size => context {
+    let text-size = measure(..size, it)
+    let my-align
+    if text-size.height < 10pt {
+      my-align = center
+    } else {
+      my-align = left
+    }
+    set align(my-align)
+    it
+    v(12pt)
+  })
+}
+
 // This function gets your whole document as its `body` and formats
 // it as a VGTC conference paper.
 #let conference(
@@ -176,10 +196,7 @@
 
   // Configure figures
   set figure(gap: 10pt)
-  show figure.caption: it => {
-    set text(font: sans-serif-font, size: 8pt)
-    it
-  }
+  show figure.caption: caption-formatting
 
   // Configure headings
   set heading(numbering: (..n) => numbering("1.1.1", ..n) + h(4pt))
@@ -209,13 +226,6 @@
       #numbering("1.1.1", ..counter(heading).get())
       #it.body
     ]
-  }
-
-  // Conference-specific: center captions and add spacing below figures
-  show figure.caption: set align(center)
-  show figure: it => {
-    it
-    v(8pt)
   }
 
   // Title
@@ -392,12 +402,7 @@
 
   // Configure figures
   set figure(gap: 10pt, supplement: "Fig.")
-  show figure.caption: it => {
-    set align(left)
-    set text(font: sans-serif-font, size: 8pt)
-    it
-    v(12pt)
-  }
+  show figure.caption: caption-formatting
 
   // Configure headings
   set heading(numbering: (..n) => numbering("1.1.1", ..n) + h(4pt))
