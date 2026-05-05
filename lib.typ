@@ -198,6 +198,9 @@
   set figure(gap: 10pt)
   show figure.caption: caption-formatting
 
+  // Configure tables
+  show figure.where(kind: table): set figure.caption(position: top)
+
   // Configure headings
   set heading(numbering: (..n) => numbering("1.1.1", ..n) + h(4pt))
   show heading: set text(font: sans-serif-font, size: 9pt, weight: "bold")
@@ -403,6 +406,10 @@
   // Configure figures
   set figure(gap: 10pt, supplement: "Fig.")
   show figure.caption: caption-formatting
+
+  // Configure tables
+  show figure.where(kind: table): set figure(supplement: [Tab.])
+  show figure.where(kind: table): set figure.caption(position: top)
 
   // Configure headings
   set heading(numbering: (..n) => numbering("1.1.1", ..n) + h(4pt))
