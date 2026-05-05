@@ -194,12 +194,18 @@
   set enum(indent: 10pt, body-indent: 9pt)
   set list(indent: 10pt, body-indent: 9pt)
 
-  // Configure figures
-  set figure(gap: 10pt)
-  show figure.caption: caption-formatting
-
-  // Configure tables
+  // Configure figures and tables
+  set figure(gap: 10pt, supplement: "Fig.")
+  show figure.where(kind: table): set figure(supplement: "Tab.")
   show figure.where(kind: table): set figure.caption(position: top)
+  show figure.caption: it => {
+    // specifically for conference template: "Figure" and "Table" are not abbreviated in captions
+    let my-supplement
+    if it.kind == table {my-supplement = "Table"}
+    else {my-supplement = "Figure"}
+
+    caption-formatting([#my-supplement~#it.counter.display()#it.separator#it.body])
+  }
 
   // Configure headings
   set heading(numbering: (..n) => numbering("1.1.1", ..n) + h(4pt))
@@ -408,7 +414,7 @@
   show figure.caption: caption-formatting
 
   // Configure tables
-  show figure.where(kind: table): set figure(supplement: [Tab.])
+  show figure.where(kind: table): set figure(supplement: "Tab.")
   show figure.where(kind: table): set figure.caption(position: top)
 
   // Configure headings
