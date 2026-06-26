@@ -226,7 +226,7 @@
   show figure.where(kind: table): set figure(supplement: "Tab.")
   show figure.where(kind: table): set figure.caption(position: top)
   show figure.caption: it => {
-    // specifically for conference template: "Figure" and "Table" are not abbreviated in captions
+    // captions spell out the supplement in full; cross references use the abbreviated form
     let my-supplement
     if it.kind == table {my-supplement = "Table"}
     else {my-supplement = "Figure"}
@@ -414,14 +414,18 @@
   set enum(indent: 10pt, body-indent: 9pt)
   set list(indent: 10pt, body-indent: 9pt)
 
-  // Configure figures
+  // Configure figures and tables
   set figure(gap: 10pt, supplement: "Fig.")
   show figure: set block(spacing: 12pt)
-  show figure.caption: format-caption
-
-  // Configure tables
   show figure.where(kind: table): set figure(supplement: "Tab.")
   show figure.where(kind: table): set figure.caption(position: top)
+  show figure.caption: it => {
+    // captions spell out the supplement in full; cross references use the abbreviated form
+    let my-supplement
+    if it.kind == table {my-supplement = "Table"}
+    else {my-supplement = "Figure"}
+    format-caption([#my-supplement~#it.counter.display()#it.separator#it.body])
+  }
 
   // Configure headings
   set heading(numbering: "1.1.1")

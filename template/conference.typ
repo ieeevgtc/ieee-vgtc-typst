@@ -46,6 +46,10 @@ ORCID IDs should be provided in all cases.
 
 Links are automatically shown for URLs but you can customize the name of the link with the `#link` function: https://typst.app/docs/reference/model/link/.
 
+Cross references use the `@label` syntax and are formatted automatically. The supplement is abbreviated to keep references compact within a sentence, e.g., @fig:chart, @tab:example, and @eq:sum.
+
+Unlike LaTeX's `cleveref`, Typst has no separate command for references at the start of a sentence. To spell out the supplement there, override it with `#ref`. For example: #ref(<fig:chart>, supplement: [Figure]) is an image and #ref(<tab:example>, supplement: [Table]) is a table.
+
 = Figures
 
 Typst automatically detects the type of figure (i.e., table, image, or code) and label them accordingly. Figures are documented at https://typst.app/docs/reference/model/figure/.
@@ -57,7 +61,7 @@ For figures with images, the image format is usually detected automatically. For
 #figure(
   image("figs/chart.svg", alt: "A bar chart showing the number of days per month broken down by weather type.", width: 80%),
   caption: "Stacked bar chart of weather data.",
-)
+) <fig:chart>
 
 Vector graphics like PDF and SVG are best for charts and other figures with text or lines.
 They will look much nicer and crisper and any text in them will be more selectable, searchable, and accessible.
