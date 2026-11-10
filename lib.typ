@@ -185,10 +185,10 @@
   set page(
     paper: paper-size,
     margin: (
-      top: 51pt,
-      bottom: 54pt,
-      left: 54pt,
-      right: 54pt
+      top: 0.75in,
+      bottom: 1in,
+      left: 0.75in,
+      right: 0.75in
     ),
     header: if review {
       context {
@@ -286,7 +286,13 @@
   }
 
   // Two-column layout
-  show: show-target(paged: it => columns(2, gutter: 12.24pt)[#it])
+  show: show-target(paged: it => columns(2, gutter: 0.34in)[#it])
+
+  // Space at the bottom of the left column on the first page for the copyright block
+  if not review {
+    on-target(paged: place(left + bottom, float: true, clearance: 0pt, block(height: 0.5in)))
+  }
+
   set par(justify: true, first-line-indent: 1em, leading: 0.45em, spacing: 0.45em)
 
   // Abstract
