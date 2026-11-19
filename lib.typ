@@ -249,12 +249,15 @@
 
   // Authors
   let emails = if review { () } else { authors.filter(author => "email" in author).map(author => author.email).dedup() }
+  // Footnotes in the title come before the e-mails
+  let footnotes-before-emails = state("footnotes-before-emails", 0)
 
   if review {
     align(center, text(10pt, font: sans-serif-font, [
       Category: #category
     ]))
   } else {
+    on-target(paged: context footnotes-before-emails.update(counter(footnote).get().first()))
     set par(leading: 0.4em)
     align(center)[
       #grid(
@@ -268,7 +271,7 @@
             }
             #if "email" in author {
               let number = emails.position(email => email == author.email) + 1
-              on-target(paged: [#h(0pt, weak: true)#super[#number]], html: footnote(author.email))
+              on-target(paged: [#h(0pt, weak: true)#context super[#(footnotes-before-emails.get() + number)]], html: footnote(author.email))
             }
           ]\
           #text(8pt, font: sans-serif-font)[#author.organization]
@@ -276,7 +279,7 @@
       )
     ]
     // The e-mails are listed above the copyright space below, so footnotes continue after them
-    on-target(paged: counter(footnote).update(emails.len()))
+    on-target(paged: counter(footnote).update(count => count + emails.len()))
   }
 
   v(18pt, weak: true)
@@ -298,11 +301,12 @@
   if not review {
     on-target(paged: place(left + bottom, float: true, {
       if emails != () {
-        line(length: 30%, stroke: 0.5pt)
+        // Same rule as the LaTeX \footnoterule
+        move(dx: 1in, line(length: 45%, stroke: 0.5pt))
         set text(size: 0.85em)
         set par(first-line-indent: 0pt, spacing: 0.5em)
-        for (index, email) in emails.enumerate() {
-          par[#super[#(index + 1)]#email]
+        context for (index, email) in emails.enumerate() {
+          par[#super[#(footnotes-before-emails.get() + index + 1)]#email]
         }
       }
       v(0.5in)
